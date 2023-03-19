@@ -29,16 +29,7 @@ class ModelTrainer:
 
     def __init__(self):
         self.model_trainer_config = ModelTrainerConfig()
-
-    # can add preprocessor_path
-    def initiate_model_trainer(self, train_arrray, test_array):
-        try:
-            X_train, X_test, y_train, y_test = (train_arrray[:, :-1],
-                                                test_array[:, :-1],
-                                                train_arrray[:, -1],
-                                                test_array[:, -1])
-
-            models = {
+        self.models = {
                 "Linear Regression": LinearRegression(),
                 "Lasso": Lasso(),
                 "Ridge": Ridge(),
@@ -49,8 +40,17 @@ class ModelTrainer:
                 # "CatBoosting Regressor": CatBoostRegressor(verbose=False),
                 "AdaBoost Regressor": AdaBoostRegressor()
             }
+   
+    # can add preprocessor_path
+    def initiate_model_trainer(self, train_arrray, test_array):
+        try:
             
-            model_report: dict = evaluate_model(X_train, X_test, y_train, y_test, models)
+            X_train, X_test, y_train, y_test = (train_arrray[:, :-1],
+                                                test_array[:, :-1],
+                                                train_arrray[:, -1],
+                                                test_array[:, -1])
+            
+            model_report: dict = evaluate_model(X_train, X_test, y_train, y_test, self.models)#self.hyper_parameters
             logging.info(f"Got modelling results")
 
             best_model = max(model_report, key = model_report.get)

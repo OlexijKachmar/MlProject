@@ -15,15 +15,29 @@ def save_object(file_path, obj):
             dill.dump(obj, file_obj)
     
     except Exception as e:
-        raise CustomException
+        raise CustomException(e, sys)
 
 
-def evaluate_model(X_train, X_test, y_train, y_test, models):
+def load_object(file_path):
+    try:
+        with open(file_path, "rb") as file_obj:
+            return dill.load(file_obj)
+
+    except Exception as e:
+        raise CustomException(e, sys)
+
+
+def evaluate_model(X_train, X_test, y_train, y_test, models):# hyper_parameters: dict
 
     try: 
         report = {}
         for i in range(len(list(models))):
             model = list(models.values())[i]
+
+            # gs = GridSearchCV(model, hyper_parameters, cv = 3)
+            # gs.fit(X_train,y_train)
+
+            # model.set_params(**gs.best_params_)
             model.fit(X_train, y_train) # Train model
 
             # Make predictions
